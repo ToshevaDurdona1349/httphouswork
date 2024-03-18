@@ -1,13 +1,16 @@
 import 'dart:convert';
-
 import 'package:http/http.dart';
-
-import '../models/example_model.dart';
+import 'package:httphouswork/models/employee_model.dart';
 
 class Network{
   static String BASE = "dummy.restapiexample.com";
   static Map<String,String> headers = {'Content-Type':'application/json; charset=UTF-8'};
 
+  /* Http Apis*/
+  static String API_EMPLOYEE_LIST = "/api/v1/employees";
+  static String API_EMPLOYEE_CREATE = "/api/v1/create";
+  static String API_EMPLOYEE_UPDATE = "/api/v1/update/"; // {id}
+  static String API_EMPLOYEE_DELETE = "/api/v1/delete/"; // {id}
 
   /* Http Requests */
   static Future<String?> GET(String api, Map<String, String> params) async{
@@ -45,39 +48,39 @@ class Network{
     }
     return null;
   }
-
+////////////////////////////////////////////////////
   /* Http Params */
   static Map<String, String> paramsEmpty() {
-    Map<String, String> params = Map();
+    Map<String, String> params = {};
     return params;
   }
-  /* Http Apis*/
-  static String API_EMPLOYEE_LIST = "/api/v1/employees";
-  static String API_EMPLOYEE_CREATE = "/api/v1/create";
-  static String API_EMPLOYEE_UPDATE = "/api/v1/update/"; // {id}
-  static String API_EMPLOYEE_DELETE = "/api/v1/delete/"; // {id}
 
-  static Map<String, String> paramsCreate(Examplee examplee) {
-    Map<String, String> params = new Map();
+  static Map<String, String> paramsCreate(Employee employee) {
+    Map<String, String> params = {};
     params.addAll({
-      'exampleName': examplee.exampleeName!,
-      'employeeSalary': examplee.exampleeSalary!.toString(),
-      'employeeAge': examplee.exampleeAge.toString(),
-      'profileImage':examplee.profileImage.toString(),
+      'employeeName': employee.employeeName.toString(),
+      'employeeSalary': employee.employeeSalary.toString(),
+      'employeeAge': employee.employeeAge.toString(),
+      'profileImage':employee.profileImage.toString(),
     });
     return params;
   }
 
-  static Map<String, String> paramsUpdate(Examplee examplee) {
-    Map<String, String> params = new Map();
+  static Map<String, String> paramsUpdate(Employee employee) {
+    Map<String, String> params = {};
     params.addAll({
-      'id': examplee.id.toString(),
-      'exampleeName': examplee.exampleeName!,
-      'employeeSalary': examplee.exampleeSalary!.toString(),
-      'employeeAge': examplee.exampleeAge.toString(),
-      'profileImage':examplee.profileImage.toString(),
+      'id': employee.id.toString(),
+      'employeeName': employee.employeeName.toString(),
+      'employeeSalary': employee.employeeSalary.toString(),
+      'employeeAge': employee.employeeAge.toString(),
+      'profileImage':employee.profileImage.toString(),
     });
     return params;
   }
 
+  /* Http Parsing */
+  static List<Employee> parseEmployee(String response) {
+    dynamic json = jsonDecode(response);
+    return EmployeeRes.fromJson(json).data;
+  }
 }
